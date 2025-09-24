@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estreias - Meu Canal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 30px 20px;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(45deg, #ff6b9d, #4ecdc4);
+            border-radius: 15px;
+            color: white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 15px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: #555;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link:hover {
+            background: linear-gradient(45deg, #ff6b9d, #4ecdc4);
+            color: white;
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        /* Estilos para os botões de categoria */
+        .category-selector {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-selector h2 {
+            font-size: 1.5rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 25px;
+        }
+
+        .category-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border: 2px solid #667eea;
+            color: #667eea;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+            min-width: 200px;
+        }
+
+        .category-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .category-btn:hover::before {
+            left: 100%;
+        }
+
+        .category-btn:hover {
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            border-color: #764ba2;
+        }
+
+        .category-btn.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border-color: #667eea;
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .category-btn.active:hover {
+            transform: scale(1.08) translateY(-2px);
+        }
+
+        .table-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        .category-info {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .category-info h3 {
+            color: #667eea;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .category-info p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .episodes-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .episodes-table th {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            text-align: left;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .episodes-table th:first-child {
+            border-top-left-radius: 15px;
+            border-bottom-left-radius: 15px;
+        }
+
+        .episodes-table th:last-child {
+            border-top-right-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        .episodes-table td {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+            font-size: 1rem;
+        }
+
+        .episodes-table tbody tr {
+            transition: all 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .episodes-table tbody tr:hover {
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .episode-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .episode-synopsis {
+            color: #666;
+            line-height: 1.5;
+            max-width: 300px;
+        }
+
+        .episode-date {
+            color: #555;
+            font-weight: 500;
+        }
+
+        .progress-container {
+            position: relative;
+            width: 120px;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.3) 50%,
+                transparent 70%
+            );
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #333;
+            text-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            text-align: center;
+            padding: 50px;
+            color: #e74c3c;
+            font-size: 1.1rem;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: 15px;
+            border: 2px solid rgba(231, 76, 60, 0.2);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-in-progress {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .status-planned {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* ESTILOS PARA EPISÓDIO RECICLADO - VERDE CLARO */
+        .status-recycled {
+            background: #28a745 !important;
+            color: white !important;
+            border: 1px solid #28a745 !important;
+            animation: pulse-green 2s infinite;
+            box-shadow: 0 2px 10px rgba(40, 167, 69, 0.3);
+        }
+
+        @keyframes pulse-green {
+            0% { 
+                box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+                transform: scale(1);
+            }
+            70% { 
+                box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+                transform: scale(1.05);
+            }
+            100% { 
+                box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+                transform: scale(1);
+            }
+        }
+
+        .recycled-date {
+            color: #28a745 !important;
+            font-weight: bold !important;
+            background: rgba(40, 167, 69, 0.1) !important;
+            padding: 8px 12px !important;
+            border-radius: 8px !important;
+            border: 2px solid #28a745 !important;
+            text-align: center !important;
+            font-size: 0.9rem !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            animation: blink-green 1.5s infinite;
+        }
+
+        @keyframes blink-green {
+            0%, 50% { 
+                background: rgba(40, 167, 69, 0.1);
+                border-color: #28a745;
+            }
+            25%, 75% { 
+                background: rgba(40, 167, 69, 0.2);
+                border-color: #1e7e34;
+            }
+        }
+
+        /* Destaque extra para linha com episódio reciclado - VERDE */
+        .recycled-row {
+            background: rgba(40, 167, 69, 0.05) !important;
+            border-left: 5px solid #28a745 !important;
+        }
+
+        .recycled-row:hover {
+            background: rgba(40, 167, 69, 0.1) !important;
+            transform: scale(1.02) !important;
+        }
+
+        /* ESTILOS PARA EPISÓDIO EXCLUÍDO - VERMELHO */
+        .status-excluded {
+            background: #dc3545 !important;
+            color: white !important;
+            border: 1px solid #dc3545 !important;
+            animation: pulse-red 2s infinite;
+            box-shadow: 0 2px 10px rgba(220, 53, 69, 0.3);
+        }
+
+        @keyframes pulse-red {
+            0% { 
+                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+                transform: scale(1);
+            }
+            70% { 
+                box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+                transform: scale(1.05);
+            }
+            100% { 
+                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+                transform: scale(1);
+            }
+        }
+
+        .excluded-date {
+            color: #dc3545 !important;
+            font-weight: bold !important;
+            background: rgba(220, 53, 69, 0.1) !important;
+            padding: 8px 12px !important;
+            border-radius: 8px !important;
+            border: 2px solid #dc3545 !important;
+            text-align: center !important;
+            font-size: 0.9rem !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            animation: blink-red 1.5s infinite;
+        }
+
+        @keyframes blink-red {
+            0%, 50% { 
+                background: rgba(220, 53, 69, 0.1);
+                border-color: #dc3545;
+            }
+            25%, 75% { 
+                background: rgba(220, 53, 69, 0.2);
+                border-color: #b02a37;
+            }
+        }
+
+        /* Destaque extra para linha com episódio excluído - VERMELHO */
+        .excluded-row {
+            background: rgba(220, 53, 69, 0.05) !important;
+            border-left: 5px solid #dc3545 !important;
+        }
+
+        .excluded-row:hover {
+            background: rgba(220, 53, 69, 0.1) !important;
+            transform: scale(1.02) !important;
+        }
+
+        /* ESTILOS PARA EPISÓDIO SEM DATA - AMARELO */
+        .status-no-date {
+            background: #ffc107 !important;
+            color: #212529 !important;
+            border: 1px solid #ffc107 !important;
+            animation: pulse-yellow 2s infinite;
+            box-shadow: 0 2px 10px rgba(255, 193, 7, 0.3);
+        }
+
+        @keyframes pulse-yellow {
+            0% { 
+                box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
+                transform: scale(1);
+            }
+            70% { 
+                box-shadow: 0 0 0 10px rgba(255, 193, 7, 0);
+                transform: scale(1.05);
+            }
+            100% { 
+                box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+                transform: scale(1);
+            }
+        }
+
+        .no-date {
+            color: #856404 !important;
+            font-weight: bold !important;
+            background: rgba(255, 193, 7, 0.1) !important;
+            padding: 8px 12px !important;
+            border-radius: 8px !important;
+            border: 2px solid #ffc107 !important;
+            text-align: center !important;
+            font-size: 0.9rem !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            animation: blink-yellow 1.5s infinite;
+        }
+
+        @keyframes blink-yellow {
+            0%, 50% { 
+                background: rgba(255, 193, 7, 0.1);
+                border-color: #ffc107;
+            }
+            25%, 75% { 
+                background: rgba(255, 193, 7, 0.2);
+                border-color: #e0a800;
+            }
+        }
+
+        /* Destaque extra para linha com episódio sem data - AMARELO */
+        .no-date-row {
+            background: rgba(255, 193, 7, 0.05) !important;
+            border-left: 5px solid #ffc107 !important;
+        }
+
+        .no-date-row:hover {
+            background: rgba(255, 193, 7, 0.1) !important;
+            transform: scale(1.02) !important;
+        }
+
+        /* ESTILOS PARA EPISÓDIO FINAL - GRADIENTE VERMELHO E VERDE */
+        .status-final {
+            background: linear-gradient(45deg, #dc3545, #28a745) !important;
+            color: white !important;
+            border: 1px solid transparent !important;
+            position: relative !important;
+            overflow: hidden !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            animation: pulse-final-badge 2s infinite;
+        }
+
+        @keyframes pulse-final-badge {
+            0%, 100% { 
+                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 0 5px rgba(40, 167, 69, 0.4);
+                transform: scale(1.05);
+            }
+        }
+
+        .status-final::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 20px;
+            background: linear-gradient(45deg, #dc3545, #28a745, #dc3545);
+            background-size: 300% 100%;
+            animation: gradient-border 3s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes gradient-border {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+
+        .final-date {
+            color: white !important;
+            font-weight: bold !important;
+            background: linear-gradient(45deg, #dc3545, #28a745) !important;
+            padding: 8px 12px !important;
+            border-radius: 8px !important;
+            text-align: center !important;
+            font-size: 0.9rem !important;
+            position: relative !important;
+            overflow: hidden !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            animation: pulse-final-date 2s infinite;
+        }
+
+        @keyframes pulse-final-date {
+            0%, 100% { 
+                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.3);
+            }
+        }
+
+        .final-date::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            border-radius: 8px;
+            background: linear-gradient(45deg, #dc3545, #28a745, #dc3545);
+            background-size: 300% 100%;
+            animation: gradient-border 3s linear infinite;
+            z-index: -1;
+        }
+
+        /* Destaque extra para linha com episódio final - GRADIENTE */
+        .final-row {
+            background: rgba(255, 255, 255, 0.95) !important;
+            position: relative !important;
+            overflow: hidden !important;
+        }
+
+        .final-row::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -3px;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, #dc3545, #28a745, #dc3545);
+            background-size: 100% 300%;
+            animation: vertical-gradient 4s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes vertical-gradient {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 0% 300%; }
+        }
+
+        .final-row:hover {
+            background: rgba(248, 249, 250, 0.98) !important;
+            transform: scale(1.02) !important;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 20px;
+            }
+
+            .nav-menu {
+                display: flex;
+                overflow-x: auto;
+                gap: 10px;
+            }
+
+            .nav-item {
+                margin-bottom: 0;
+                min-width: 120px;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .category-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .category-btn {
+                min-width: 250px;
+            }
+
+            .table-container {
+                padding: 15px;
+            }
+
+            .episodes-table {
+                font-size: 0.9rem;
+            }
+
+            .episodes-table th,
+            .episodes-table td {
+                padding: 15px 10px;
+            }
+
+            .episode-synopsis {
+                max-width: 200px;
+                font-size: 0.9rem;
+            }
+
+            .progress-container {
+                width: 80px;
+                height: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="sidebar">
+            <div class="logo">
+                <h1>Meu Canal</h1>
+                <p>Criatividade sem limites</p>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">🏠 Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="videos.html" class="nav-link">🎥 Vídeos</a>
+                </li>
+                <li class="nav-item">
+                    <a href="series.html" class="nav-link">📺 Séries</a>
+                </li>
+                <li class="nav-item">
+                    <a href="dubladores.html" class="nav-link">🎙️ Dubladores</a>
+                </li>
+                <li class="nav-item">
+                    <a href="collab.html" class="nav-link">🤝 Collab</a>
+                </li>
+                <li class="nav-item">
+                    <a href="roteiros.html" class="nav-link">📝 Roteiros</a>
+                </li>
+                <li class="nav-item">
+                    <a href="imagens.html" class="nav-link">🖼️ Imagens</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link active">⭐ Estreias</a>
+                </li>
+                <li class="nav-item">
+                    <a href="Miraculous.html" class="nav-link">🐞 Miraculous</a>
+                </li>
+                <li class="nav-item">
+                    <a href="spin.html" class="nav-link">🔄 Spin-offs</a>
+                </li>
+                <li class="nav-item">
+                    <a href="sugestoes.html" class="nav-link">💡 Sugestões</a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <div class="header">
+                <h1>⭐ Próximas Estreias</h1>
+                <p>Acompanhe o progresso dos episódios que estão sendo produzidos</p>
+            </div>
+
+            <!-- Botões de Seleção de Categoria -->
+            <div class="category-selector">
+                <h2>Selecione uma categoria:</h2>
+                <div class="category-buttons">
+                    <button class="category-btn active" data-category="sombras">
+                        🐞 Miraculous - Sombras do Passado
+                    </button>
+                    <button class="category-btn" data-category="brasil">
+                        🇧🇷 Miraculous Brasil
+                    </button>
+                    <button class="category-btn" data-category="outras">
+                        ⭐ Outras Estreias
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <div id="loadingState" class="loading">
+                    <div class="spinner"></div>
+                    <p>Carregando episódios...</p>
+                </div>
+
+                <div id="errorState" class="error" style="display: none;">
+                    <h3>❌ Erro ao carregar episódios</h3>
+                    <p>Não foi possível carregar os dados</p>
+                </div>
+
+                <!-- Informações da categoria selecionada -->
+                <div id="categoryInfo" class="category-info" style="display: none;">
+                    <h3 id="categoryTitle"></h3>
+                    <p id="categoryDescription"></p>
+                </div>
+
+                <table id="episodesTable" class="episodes-table" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>📺 Nome do Episódio</th>
+                            <th>📝 Sinopse</th>
+                            <th>📅 Data de Lançamento</th>
+                            <th>📊 Progresso</th>
+                        </tr>
+                    </thead>
+                    <tbody id="episodesTableBody">
+                        <!-- Episódios serão carregados aqui via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Dados das diferentes categorias
+        const categoryData = {
+            sombras: {
+                secao: "Miraculous - Sombras do Passado",
+                descricao: "Aqui estão reunidos todos os episódios da 1ª temporada desse novo universo, mostrando a transformação de Adrien em Death Moth, a ascensão de novos heróis e a luta pela sobrevivência de Paris contra ilusões e caos.",
+                episodios: [
+                    {
+                        nome: "A Herança ( Origens parte 1)",
+                        sinopse: "Adrien finalmente descobre que seu pai era o monarch, mas não recebe a informação de uma forma muito boa, pois percebe que Marinette mentiu para ele sobre seu pai, então ele resolve recorrer as trevas, para tentar trazer sua mãe e seu pai devolta a vida",
+                        dataLancamento: "Jun 28, 2025",
+                        porcentagem: 100
+                    },
+                    {
+                        nome: "Sinais ( Origens parte 2)",
+                        sinopse: "Esse foi o ultimo episodios com os visuais antigos e curto, pois os proximos episodios, a animação esta mais fluida, e com mais tempo(11 a 14 minutos), nesse episodio, os herois enfrentam Bleud, e chamam um novo aliado, Squeekster",
+                        dataLancamento: "Jul 13, 2025",
+                        porcentagem: 100
+                    },
+                    {
+                        nome: "A Goleira",
+                        sinopse: "SEM SINOPSE",
+                        dataLancamento: "EXCLUIDO",
+                        porcentagem: 0
+                    },
+                    {
+                        nome: "Mentes Alinhadas",
+                        sinopse: "Enquanto Adrien, agora Death Moth, traça uma nova estratégia para se manter nas sombras sem ser descoberto, Marinette revive suas memórias com os antigos heróis ao reler seu diário secreto. Enquanto isso, Louis e seus amigos ainda tentam compreender o peso de carregar os Miraculous.",
+                        dataLancamento: "10/10/2025",
+                        porcentagem: 10
+                    },
+                    {
+                        nome: "Caos Silencioso",
+                        sinopse: "SEM SINOPSE AINDA",
+                        dataLancamento: "",
+                        porcentagem: 2
+                    },
+                    {
+                        nome: "Sob o mesmo céu",
+                        sinopse: "SEM SINOPSE AINDA",
+                        dataLancamento: "",
+                        porcentagem: 0
+                    },
+                    {
+                        nome: "Entre Máscaras",
+                        sinopse: "SEM SINOPSE AINDA",
+                        dataLancamento: "",
+                        porcentagem: 3
+                    },
+                    {
+                        nome: "Fragmentos",
+                        sinopse: "SEM SINOPSE AINDA",
+                        dataLancamento: "octuber, 31, 2025",
+                        porcentagem: 10
+                    },
+                    {
+                        nome: "Transmissao ( O Começo do fim parte 1)",
+                        sinopse: "Death Moth dá início ao seu plano mais perigoso: usar ilusões para manipular Paris inteira e jogar a opinião pública contra os heróis. As falsas imagens espalham desconfiança, colocando até os novos portadores em dúvida sobre si mesmos.",
+                        dataLancamento: "11/11/2025 (episodio final)",
+                        porcentagem: 20
+                    },
+                    {
+                        nome: "Emoção ( O Começo do fim parte 2)",
+                        sinopse: "Após a queda de Death Moth, Paris começa a se recuperar, mas os heróis percebem que a vitória não foi completa. Louis, agora guardião, sente o peso da responsabilidade, enquanto a equipe lida com feridas físicas e emocionais deixadas pela última batalha",
+                        dataLancamento: "12/11/2025 (episodio final)",
+                        porcentagem: 30
+                    }
+                ]
+            },
+            brasil: {
+                secao: "Miraculous Brasil",
+                descricao: "Uma nova aventura de Miraculous ambientada no Brasil, explorando a cultura brasileira com novos heróis e vilões únicos.",
+                episodios: []
+            },
+            outras: {
+                secao: "Outras Estreias",
+                descricao: "Diversos projetos e episódios especiais que não se encaixam nas outras categorias principais.",
+                episodios: []
+            }
+        };
+
+        let currentCategory = 'sombras';
+
+        // Função para carregar os episódios da categoria selecionada
+        function loadEpisodes(category = 'sombras') {
+            try {
+                const data = categoryData[category];
+                
+                if (category === 'outras') {
+                    // Para "outras estreias", tenta carregar do eps.json
+                    loadFromJSON();
+                    return;
+                }
+                
+                displayEpisodes(data);
+                
+            } catch (error) {
+                console.error('Erro ao carregar episódios:', error);
+                showError();
+            }
+        }
+
+        // Função para carregar do arquivo JSON (para outras estreias)
+        async function loadFromJSON() {
+            try {
+                const response = await fetch('eps.json');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                displayEpisodes({
+                    secao: "Outras Estreias",
+                    descricao: "Episódios diversos e projetos especiais do canal.",
+                    episodios: Array.isArray(data) ? data : data.episodios || []
+                });
+                
+            } catch (error) {
+                console.error('Erro ao carregar eps.json:', error);
+                // Se falhar, mostra episódios vazios para outras estreias
+                displayEpisodes(categoryData.outras);
+            }
+        }
+
+        // Função para exibir os episódios na tabela
+        function displayEpisodes(data) {
+            const tableBody = document.getElementById('episodesTableBody');
+            const loadingState = document.getElementById('loadingState');
+            const episodesTable = document.getElementById('episodesTable');
+            const categoryInfo = document.getElementById('categoryInfo');
+            const categoryTitle = document.getElementById('categoryTitle');
+            const categoryDescription = document.getElementById('categoryDescription');
+
+            // Limpar conteúdo existente
+            tableBody.innerHTML = '';
+
+            // Mostrar informações da categoria
+            categoryTitle.textContent = data.secao;
+            categoryDescription.textContent = data.descricao;
+            categoryInfo.style.display = 'block';
+
+            // Verificar se há episódios
+            if (!data.episodios || data.episodios.length === 0) {
+                showError('Nenhum episódio encontrado para esta categoria');
+                return;
+            }
+
+            // Criar linhas da tabela para cada episódio
+            data.episodios.forEach((episode, index) => {
+                const row = document.createElement('tr');
+                
+                // VERIFICAR TIPO DO EPISÓDIO BASEADO NA DATA
+                const dataLancamento = episode.dataLancamento ? episode.dataLancamento.toString().trim() : '';
+                const dataUpperCase = dataLancamento.toUpperCase();
+                
+                let isRecycled = false;
+                let isExcluded = false;
+                let hasNoDate = false;
+                let isFinal = false;
+                
+                // Verificar se é episódio final (contém "episodio final" ou "final")
+                if (dataUpperCase.includes('EPISODIO FINAL') || 
+                    dataUpperCase.includes('EPISÓDIO FINAL') ||
+                    dataUpperCase.includes('FINAL)')) {
+                    isFinal = true;
+                }
+                // Verificar se é reciclado
+                else if (dataUpperCase === 'EPISODIO RECICLADO' || 
+                         dataUpperCase === 'EPISÓDIO RECICLADO' ||
+                         dataUpperCase.includes('RECICLADO')) {
+                    isRecycled = true;
+                }
+                // Verificar se é excluído
+                else if (dataUpperCase === 'EPISODIO EXCLUIDO' ||
+                         dataUpperCase === 'EPISÓDIO EXCLUÍDO' ||
+                         dataUpperCase === 'EPISODIO EXCLUÍDO' ||
+                         dataUpperCase === 'EPISÓDIO EXCLUIDO' ||
+                         dataUpperCase.includes('EXCLU')) {
+                    isExcluded = true;
+                }
+                // Verificar se não tem data (vazio, null, undefined)
+                else if (!episode.dataLancamento || 
+                         dataUpperCase === '' || 
+                         dataUpperCase === 'NULL' || 
+                         dataUpperCase === 'UNDEFINED') {
+                    hasNoDate = true;
+                }
+                
+                // Determinar status e classe baseado no tipo
+                let statusClass = 'status-planned';
+                let statusText = 'Planejado';
+                let rowClass = '';
+                
+                if (isFinal) {
+                    statusClass = 'status-final';
+                    statusText = '🏁 Final';
+                    rowClass = 'final-row';
+                } else if (isRecycled) {
+                    statusClass = 'status-recycled';
+                    statusText = '♻️ RECICLADO';
+                    rowClass = 'recycled-row';
+                } else if (isExcluded) {
+                    statusClass = 'status-excluded';
+                    statusText = '❌ EXCLUÍDO';
+                    rowClass = 'excluded-row';
+                } else if (hasNoDate) {
+                    statusClass = 'status-no-date';
+                    statusText = '⚠️ SEM DATA';
+                    rowClass = 'no-date-row';
+                } else if (episode.porcentagem >= 100) {
+                    statusClass = 'status-completed';
+                    statusText = 'Concluído';
+                } else if (episode.porcentagem > 0) {
+                    statusClass = 'status-in-progress';
+                    statusText = 'Em Progresso';
+                }
+
+                // Adicionar classe especial à linha se necessário
+                if (rowClass) {
+                    row.classList.add(rowClass);
+                }
+
+                // Formatação da data com destaque especial para cada tipo
+                let dateDisplay;
+                if (isFinal) {
+                    // Extrair apenas a data, removendo o texto "(episodio final)"
+                    let cleanDate = dataLancamento.replace(/\(.*final.*\)/gi, '').trim();
+                    let formattedDate = formatDate(cleanDate) || cleanDate;
+                    dateDisplay = `<div class="final-date">${formattedDate}</div>`;
+                } else if (isRecycled) {
+                    dateDisplay = '<div class="recycled-date">♻️ EPISÓDIO RECICLADO</div>';
+                } else if (isExcluded) {
+                    dateDisplay = '<div class="excluded-date">❌ EXCLUÍDO</div>';
+                } else if (hasNoDate) {
+                    dateDisplay = '<div class="no-date">⚠️ SEM DATA</div>';
+                } else {
+                    dateDisplay = `<div class="episode-date">${formatDate(episode.dataLancamento)}</div>`;
+                }
+
+                row.innerHTML = `
+                    <td>
+                        <div class="episode-name">${episode.nome || 'Episódio sem nome'}</div>
+                        <div class="status-badge ${statusClass}">${statusText}</div>
+                    </td>
+                    <td>
+                        <div class="episode-synopsis">${episode.sinopse || 'Sinopse não disponível'}</div>
+                    </td>
+                    <td>
+                        ${dateDisplay}
+                    </td>
+                    <td>
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: ${Math.min(Math.max(episode.porcentagem || 0, 0), 100)}%"></div>
+                            <div class="progress-text">${episode.porcentagem || 0}%</div>
+                        </div>
+                    </td>
+                `;
+
+                tableBody.appendChild(row);
+
+                // Adicionar animação de entrada
+                setTimeout(() => {
+                    row.style.opacity = '0';
+                    row.style.transform = 'translateY(20px)';
+                    row.style.transition = 'all 0.5s ease';
+                    
+                    requestAnimationFrame(() => {
+                        row.style.opacity = '1';
+                        row.style.transform = 'translateY(0)';
+                    });
+                }, index * 100);
+            });
+
+            // Mostrar tabela e ocultar loading
+            loadingState.style.display = 'none';
+            episodesTable.style.display = 'table';
+        }
+
+        // Função para formatar data
+        function formatDate(dateString) {
+            if (!dateString) return 'Data não definida';
+            
+            try {
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) {
+                    return dateString; // Retorna a string original se não conseguir converter
+                }
+                return date.toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+            } catch (error) {
+                return dateString; // Retorna a string original se não conseguir formatar
+            }
+        }
+
+        // Função para mostrar erro
+        function showError(message = null) {
+            const loadingState = document.getElementById('loadingState');
+            const errorState = document.getElementById('errorState');
+            const episodesTable = document.getElementById('episodesTable');
+            const categoryInfo = document.getElementById('categoryInfo');
+
+            if (message) {
+                errorState.querySelector('p').textContent = message;
+            }
+
+            loadingState.style.display = 'none';
+            errorState.style.display = 'block';
+            episodesTable.style.display = 'none';
+            categoryInfo.style.display = 'none';
+        }
+
+        // Função para mudar categoria
+        function changeCategory(category) {
+            if (currentCategory === category) return;
+            
+            currentCategory = category;
+            
+            // Atualizar botões ativos
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-category="${category}"]`).classList.add('active');
+            
+            // Mostrar loading
+            const loadingState = document.getElementById('loadingState');
+            const errorState = document.getElementById('errorState');
+            const episodesTable = document.getElementById('episodesTable');
+            const categoryInfo = document.getElementById('categoryInfo');
+
+            loadingState.style.display = 'block';
+            errorState.style.display = 'none';
+            episodesTable.style.display = 'none';
+            categoryInfo.style.display = 'none';
+
+            // Carregar nova categoria após um breve delay
+            setTimeout(() => {
+                loadEpisodes(category);
+            }, 500);
+        }
+
+        // Adiciona interatividade aos botões de categoria
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const category = this.getAttribute('data-category');
+                changeCategory(category);
+            });
+        });
+
+        // Adiciona interatividade aos links da navegação
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (this.getAttribute('href') === '#') {
+                    e.preventDefault();
+                }
+                
+                // Remove active class from all links
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                // Add active class to clicked link
+                this.classList.add('active');
+            });
+        });
+
+        // Carregar episódios quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            // Pequeno delay para mostrar o loading
+            setTimeout(() => {
+                loadEpisodes(currentCategory);
+            }, 500);
+        });
+
+        // Função para recarregar os dados
+        function reloadEpisodes() {
+            changeCategory(currentCategory);
+        }
+
+        // Adicionar botão de recarregar em caso de erro (opcional)
+        document.getElementById('errorState').addEventListener('click', reloadEpisodes);
+    </script>
+</body>
+</html>

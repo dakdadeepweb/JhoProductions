@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roteiros Reciclados - Canal MLP & Miraculous</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 30px 20px;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(45deg, #ff6b9d, #4ecdc4);
+            border-radius: 15px;
+            color: white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 15px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: #555;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link:hover {
+            background: linear-gradient(45deg, #ff6b9d, #4ecdc4);
+            color: white;
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .content-wrapper {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-title {
+            font-size: 3rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .page-subtitle {
+            font-size: 1.3rem;
+            color: #666;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .main-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px 40px;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .main-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(45deg, #764ba2, #667eea);
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 40px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 2rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(0, 0, 0, 0.1);
+            transform: rotate(90deg);
+        }
+
+        .modal-title {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Roteiros Grid */
+        .roteiros-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .roteiro-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border: 2px solid transparent;
+            border-radius: 20px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .roteiro-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .roteiro-card:hover::before {
+            left: 100%;
+        }
+
+        .roteiro-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: rgba(102, 126, 234, 0.3);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.15));
+        }
+
+        .roteiro-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #ff6b9d, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .roteiro-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .roteiro-info {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        /* Document Viewer */
+        .document-viewer {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+            text-align: left;
+            border: 1px solid #eee;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .document-content {
+            color: #333;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        .document-content h1, .document-content h2, .document-content h3 {
+            color: #667eea;
+            margin: 20px 0 10px 0;
+        }
+
+        .document-content p {
+            margin-bottom: 15px;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 1s ease-in-out infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            color: #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            margin: 20px 0;
+        }
+
+        /* Search Input */
+        .search-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 15px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 20px;
+            }
+
+            .nav-menu {
+                display: flex;
+                overflow-x: auto;
+                gap: 10px;
+            }
+
+            .nav-item {
+                margin-bottom: 0;
+                min-width: 120px;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .content-wrapper {
+                padding: 30px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .roteiros-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .modal-content {
+                padding: 25px;
+                margin: 20px;
+            }
+
+            .modal-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <nav class="sidebar">
+            <div class="logo">
+                <h1>Meu Canal</h1>
+                <p>Criatividade sem limites</p>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">🏠 Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="videos.html" class="nav-link">🎥 Videos</a>
+                </li>
+                <li class="nav-item">
+                    <a href="series.html" class="nav-link">📺 Series</a>
+                </li>
+                <li class="nav-item">
+                    <a href="dubladores.html" class="nav-link">🎙️ Dubladores</a>
+                </li>
+                <li class="nav-item">
+                    <a href="collab.html" class="nav-link">🤝 Collab</a>
+                </li>
+                <li class="nav-item">
+                    <a href="roteiros.html" class="nav-link active">📝 Roteiros</a>
+                </li>
+                <li class="nav-item">
+                    <a href="imagens.html" class="nav-link">🖼️ Imagens</a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <div class="content-wrapper">
+                <h1 class="page-title">📝 Roteiros Reciclados</h1>
+                <p class="page-subtitle">
+                    Descubra nossos roteiros exclusivos! Historias incriveis que foram reaproveitadas 
+                    e ganharam nova vida em nossos projetos de My Little Pony e Miraculous.
+                </p>
+
+                <button class="main-button" onclick="openRoteiroModal()">
+                    📚 Selecione o roteiro que gostaria de ler
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de Seleção de Roteiros -->
+    <div class="modal-overlay" id="roteiroModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('roteiroModal')">&times;</button>
+            <h2 class="modal-title">📚 Escolha seu Roteiro</h2>
+            <input type="text" class="search-input" placeholder="🔍 Buscar roteiros..." onkeyup="searchRoteiros(this.value)">
+            <div id="roteirosGrid" class="roteiros-grid">
+                <div class="loading-spinner"></div>
+                <p>Carregando roteiros disponiveis...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Visualização do Documento -->
+    <div class="modal-overlay" id="documentModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('documentModal')">&times;</button>
+            <h2 class="modal-title" id="documentTitle">📖 Lendo Roteiro</h2>
+            <div id="documentViewer" class="document-viewer">
+                <div class="loading-spinner"></div>
+                <p>Carregando documento...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let roteirosDisponiveis = [];
+
+        // Função para carregar roteiros da pasta assets/roteiros
+        async function loadAvailableRoteiros() {
+            const roteirosPath = 'assets/roteiros/';
+            const possibleFiles = [
+                'A Goleira.docx',
+                'cristal_perdido.docx', 
+                'akuma_escola.docx',
+                'corrida_seculo.docx',
+                'segredo_paris.docx',
+                'aventura_canterlot.docx',
+                'poder_miraculous.docx',
+                'amizade_eterna.docx'
+            ];
+
+            roteirosDisponiveis = [];
+
+            for (const file of possibleFiles) {
+                try {
+                    const response = await fetch(roteirosPath + file, { method: 'HEAD' });
+                    if (response.ok) {
+                        const fileName = file.replace('.docx', '');
+                        const displayName = formatFileName(fileName);
+                        
+                        roteirosDisponiveis.push({
+                            nome: displayName,
+                            arquivo: roteirosPath + file,
+                            descricao: generateDescription(fileName),
+                            fileName: fileName
+                        });
+                    }
+                } catch (error) {
+                    console.log(`Arquivo ${file} não encontrado`);
+                }
+            }
+
+            // Se nenhum arquivo foi encontrado, mostrar mensagem
+            if (roteirosDisponiveis.length === 0) {
+                console.log('Nenhum roteiro encontrado na pasta assets/roteiros/');
+            }
+        }
+
+        // Função para formatar nome do arquivo para exibição
+        function formatFileName(fileName) {
+            return fileName
+                .replace(/_/g, ' ')
+                .replace(/\b\w/g, char => char.toUpperCase());
+        }
+
+        // Função para gerar descrição baseada no nome do arquivo
+        function generateDescription(fileName) {
+            const descriptions = {
+                'magia_amizade': 'Um roteiro emocionante sobre o poder da verdadeira amizade entre os poneis.',
+                'cristal_perdido': 'Uma aventura epica em busca do cristal que protege Equestria.',
+                'akuma_escola': 'Marinette enfrenta um novo desafio quando um akuma ataca sua escola.',
+                'corrida_seculo': 'Rainbow Dash participa da competição mais importante de sua vida.',
+                'segredo_paris': 'Adrien descobre um segredo ancestral sobre os Miraculous de Paris.',
+                'aventura_canterlot': 'Uma jornada magica pelos corredores do castelo de Canterlot.',
+                'poder_miraculous': 'Os herois descobrem novos poderes em seus Miraculous.',
+                'amizade_eterna': 'Uma historia sobre laços que transcendem o tempo e o espaço.'
+            };
+            
+            return descriptions[fileName] || 'Um roteiro incrivel esperando para ser descoberto.';
+        }
+
+        // Função para abrir modal de seleção
+        async function openRoteiroModal() {
+            const modal = document.getElementById('roteiroModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            await loadAvailableRoteiros();
+            displayRoteiros();
+        }
+
+        // Função para exibir roteiros na grid
+        function displayRoteiros() {
+            const grid = document.getElementById('roteirosGrid');
+            
+            if (roteirosDisponiveis.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #666;">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">📁</div>
+                        <h3>Nenhum roteiro encontrado</h3>
+                        <p>Certifique-se de que os arquivos .docx estão na pasta assets/roteiros/</p>
+                        <p style="font-size: 0.9rem; margin-top: 10px; color: #888;">
+                            Arquivos suportados: magia_amizade.docx, cristal_perdido.docx, akuma_escola.docx, etc.
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            roteirosDisponiveis.forEach((roteiro, index) => {
+                html += `
+                    <div class="roteiro-card" onclick="openDocument('${roteiro.arquivo}', '${roteiro.nome}')">
+                        <div class="roteiro-icon">📄</div>
+                        <div class="roteiro-name">${roteiro.nome}</div>
+                        <div class="roteiro-info">${roteiro.descricao}</div>
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = html;
+        }
+
+        // Função para buscar roteiros
+        function searchRoteiros(termo) {
+            const cards = document.querySelectorAll('.roteiro-card');
+            let visibleCount = 0;
+            
+            cards.forEach(card => {
+                const nome = card.querySelector('.roteiro-name')?.textContent.toLowerCase() || '';
+                const descricao = card.querySelector('.roteiro-info')?.textContent.toLowerCase() || '';
+                
+                if (nome.includes(termo.toLowerCase()) || descricao.includes(termo.toLowerCase())) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Função para abrir documento
+        function openDocument(arquivo, nome) {
+            closeModal('roteiroModal');
+            
+            const documentTitle = document.getElementById('documentTitle');
+            const documentViewer = document.getElementById('documentViewer');
+            
+            documentTitle.textContent = `📖 ${nome}`;
+            documentViewer.innerHTML = `
+                <div class="loading-spinner"></div>
+                <p>Carregando documento...</p>
+            `;
+            
+            const modal = document.getElementById('documentModal');
+            modal.classList.add('active');
+            
+            loadWordDocument(arquivo, documentViewer);
+        }
+
+        // Função para carregar documento Word
+        async function loadWordDocument(arquivo, container) {
+            try {
+                const response = await fetch(arquivo);
+                if (!response.ok) {
+                    throw new Error('Arquivo não encontrado');
+                }
+                
+                const arrayBuffer = await response.arrayBuffer();
+                const result = await mammoth.convertToHtml({arrayBuffer: arrayBuffer});
+                
+                container.innerHTML = `<div class="document-content">${result.value}</div>`;
+                
+                // Adicionar informações de mensagens de aviso se houver
+                if (result.messages && result.messages.length > 0) {
+                    const warnings = result.messages.map(msg => msg.message).join('<br>');
+                    container.innerHTML += `
+                        <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 10px;">
+                            <strong>Avisos do conversor:</strong><br>
+                            <small>${warnings}</small>
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                console.error('Erro ao carregar documento:', error);
+                
+                container.innerHTML = `
+                    <div class="error-message">
+                        <strong>📁 Erro ao carregar o arquivo:</strong> ${arquivo}<br>
+                        <small>Verifique se o arquivo existe na pasta assets/roteiros/ e é um documento Word válido (.docx)</small>
+                    </div>
+                    <div class="document-content">
+                        <h3>Não foi possivel carregar o roteiro</h3>
+                        <p>Certifique-se de que:</p>
+                        <ul>
+                            <li>O arquivo está na pasta correta (assets/roteiros/)</li>
+                            <li>O arquivo é um documento Word (.docx)</li>
+                            <li>O arquivo não está corrompido</li>
+                            <li>Você tem permissões para acessar o arquivo</li>
+                        </ul>
+                    </div>
+                `;
+            }
+        }
+
+        // Função para fechar modal
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animação de entrada para o botão principal
+            const mainButton = document.querySelector('.main-button');
+            if (mainButton) {
+                mainButton.style.opacity = '0';
+                mainButton.style.transform = 'translateY(30px)';
+                
+                setTimeout(() => {
+                    mainButton.style.transition = 'all 0.6s ease';
+                    mainButton.style.opacity = '1';
+                    mainButton.style.transform = 'translateY(0)';
+                }, 300);
+            }
+        });
+
+        // Fechar modal ao clicar fora dele
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', function(event) {
+                if (event.target === this) {
+                    closeModal(this.id);
+                }
+            });
+        });
+
+        // Fechar modal com ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const activeModal = document.querySelector('.modal-overlay.active');
+                if (activeModal) {
+                    closeModal(activeModal.id);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

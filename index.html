@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Canal - Séries e Quadrinhos MLP & Miraculous</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Popup Styles */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .popup-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .popup {
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            max-width: 550px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+            transform: scale(0.7) translateY(-50px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .popup-overlay.show .popup {
+            transform: scale(1) translateY(0);
+        }
+
+        .popup::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(45deg, #ff6b9d, #4ecdc4, #667eea, #764ba2);
+            background-size: 300% 100%;
+            animation: gradientMove 3s linear infinite;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+
+        .popup-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-15px); }
+            60% { transform: translateY(-8px); }
+        }
+
+        .popup-title {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .popup-text {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .popup-text p {
+            margin-bottom: 15px;
+            text-align: left;
+            font-size: 1.05rem;
+        }
+
+        .popup-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .popup-highlight {
+            background: linear-gradient(45deg, #ff6b9d, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+        }
+
+        .popup-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .popup-link:hover {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .popup-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .popup-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .popup-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+            transition: all 0.3s ease;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .popup-close:hover {
+            background: #f0f0f0;
+            color: #333;
+            transform: rotate(90deg);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 30px 20px;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(45deg, #ff6b9d, #4ecdc4);
+            border-radius: 15px;
+            color: white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 15px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: #555;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link:hover {
+            background: linear-gradient(45deg, #ff6b9d, #4ecdc4);
+            color: white;
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: linear-gradient(45deg, #ff6b9d, #4ecdc4);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover::before {
+            transform: scaleY(1);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .content-wrapper {
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: #666;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            padding: 30px;
+            border-radius: 20px;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .feature-desc {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .cta-section {
+            background: linear-gradient(45deg, #ff6b9d, #4ecdc4);
+            padding: 30px;
+            border-radius: 20px;
+            color: white;
+        }
+
+        .cta-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .cta-text {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 20px;
+            }
+
+            .nav-menu {
+                display: flex;
+                overflow-x: auto;
+                gap: 10px;
+            }
+
+            .nav-item {
+                margin-bottom: 0;
+                min-width: 120px;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .content-wrapper {
+                padding: 30px;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .popup {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+
+            .popup-title {
+                font-size: 1.5rem;
+            }
+
+            .popup-buttons {
+                flex-direction: column;
+            }
+
+            .popup-btn {
+                width: 100%;
+            }
+        }
+
+        /* Floating particles animation */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        .particle:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { left: 20%; animation-delay: 1s; }
+        .particle:nth-child(3) { left: 30%; animation-delay: 2s; }
+        .particle:nth-child(4) { left: 40%; animation-delay: 3s; }
+        .particle:nth-child(5) { left: 50%; animation-delay: 4s; }
+        .particle:nth-child(6) { left: 60%; animation-delay: 5s; }
+        .particle:nth-child(7) { left: 70%; animation-delay: 0.5s; }
+        .particle:nth-child(8) { left: 80%; animation-delay: 1.5s; }
+        .particle:nth-child(9) { left: 90%; animation-delay: 2.5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) scale(0); }
+            10% { transform: translateY(90vh) scale(1); }
+            90% { transform: translateY(-10vh) scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Popup Overlay -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup">
+            <button class="popup-close" onclick="closePopup()">&times;</button>
+            <div class="popup-icon">🎉</div>
+            <h2 class="popup-title">ATUALIZAÇÃO</h2>
+            <div class="popup-text">
+                <p><strong>1.</strong> Agora, você pode ver os <span class="popup-highlight">roteiros reciclados</span> na página a seguir: <a href="roteiros.html" class="popup-link">aqui</a></p>
+                <p><strong>2.</strong> Agora você pode ver algumas <span class="popup-highlight">imagens exclusivas</span> a seguir: <a href="imagens.html" class="popup-link">aqui</a></p>
+                <p><strong>3.</strong> A Página <span class="popup-highlight">Collab/Sarah/MLP.html</span> foi atualizada! agora, com os botões todos funcionando: <a href="Collab/Sarah/MLP.html" class="popup-link">aqui</a></p>
+                <p><strong>4.</strong> A Página <span class="popup-highlight">Collab.html</span> foi atualizada! <a href="collab.html" class="popup-link">Confira agora</a></p>
+                <p><strong>5.</strong> A Página <span class="popup-highlight">collab/Sarah.html</span> foi atualizada com novos recursos: <a href="collab/Sarah.html" class="popup-link">veja aqui</a></p>
+                <p><strong>6.</strong> A Página <span class="popup-highlight">series.html</span> foi completamente renovada! <a href="series.html" class="popup-link">Explore agora</a></p>
+                <p><strong>7.</strong> Agora você pode verificar as <span class="popup-highlight">estreias</span> na nova página dedicada: <a href="estreias.html" class="popup-link">estreias.html</a></p>
+                <p><strong>8.</strong> Páginas exclusivas das séries: <a href="Miraculous.html" class="popup-link">Miraculous</a> e <a href="spin.html" class="popup-link">Spin-offs</a>!</p>
+                <p><strong>9.</strong> Além de poder mandar <span class="popup-highlight">sugestões</span> na nova página: <a href="sugestoes.html" class="popup-link">sugestões.html</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="container">
+        <nav class="sidebar">
+            <div class="logo">
+                <h1>Meu Canal</h1>
+                <p>Criatividade sem limites</p>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active">🏠 Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="videos.html" class="nav-link">🎥 Vídeos</a>
+                </li>
+                <li class="nav-item">
+                    <a href="series.html" class="nav-link">📺 Séries</a>
+                </li>
+                <li class="nav-item">
+                    <a href="dubladores.html" class="nav-link">🎙️ Dubladores</a>
+                </li>
+                <li class="nav-item">
+                    <a href="collab.html" class="nav-link">🤝 Collab</a>
+                </li>
+                <li class="nav-item">
+                    <a href="roteiros.html" class="nav-link">📝 Roteiros</a>
+                </li>
+                <li class="nav-item">
+                    <a href="imagens.html" class="nav-link">🖼️ Imagens</a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <div class="content-wrapper">
+                <h1 class="hero-title">Bem-vindos ao Meu Canal!</h1>
+                <p class="hero-subtitle">
+                    Aqui você encontra o melhor conteúdo de My Little Pony e Miraculous! 
+                    Criamos séries incríveis e quadrinhos únicos que vão te encantar.
+                </p>
+
+                <div class="features">
+                    <div class="feature-card">
+                        <div class="feature-icon">🦄</div>
+                        <h3 class="feature-title">My Little Pony</h3>
+                        <p class="feature-desc">
+                            Séries e quadrinhos originais do universo MLP com histórias emocionantes e personagens cativantes.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🐞</div>
+                        <h3 class="feature-title">Miraculous</h3>
+                        <p class="feature-desc">
+                            Aventuras épicas de Ladybug e Cat Noir em formato de série e quadrinhos exclusivos.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="cta-section">
+                    <h2 class="cta-title">✨ Muita coisa está por vir! ✨</h2>
+                    <p class="cta-text">
+                        Estamos trabalhando em projetos incríveis que vão surpreender vocês. 
+                        Novos episódios, quadrinhos exclusivos e muito mais conteúdo está sendo preparado 
+                        com todo o carinho para nossa comunidade!
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Função para mostrar o popup quando a página carrega
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('popupOverlay').classList.add('show');
+            }, 500);
+        });
+
+        // Função para fechar o popup
+        function closePopup() {
+            document.getElementById('popupOverlay').classList.remove('show');
+        }
+
+        // Fechar popup clicando fora dele
+        document.getElementById('popupOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePopup();
+            }
+        });
+
+        // Fechar popup com a tecla ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePopup();
+            }
+        });
+
+        // Adiciona interatividade aos links da navegação
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Remove active class from all links
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                // Add active class to clicked link
+                this.classList.add('active');
+            });
+        });
+
+        // Adiciona efeito de hover suave
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

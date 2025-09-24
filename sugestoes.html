@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sugestões - Meu Canal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 30px 20px;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(45deg, #ff6b9d, #4ecdc4);
+            border-radius: 15px;
+            color: white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 15px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: #555;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link:hover {
+            background: linear-gradient(45deg, #ff6b9d, #4ecdc4);
+            color: white;
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        /* Form Container */
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b9d, #4ecdc4, #667eea, #764ba2);
+            background-size: 300% 100%;
+            animation: gradient-move 3s linear infinite;
+        }
+
+        @keyframes gradient-move {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+
+        .form-intro {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .form-intro h2 {
+            color: #667eea;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .form-intro p {
+            color: #666;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        /* Iframe Container */
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .iframe-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 15px;
+        }
+
+        /* Loading Animation */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            border-radius: 15px;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #667eea;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        /* Help Section */
+        .help-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(45deg, rgba(255, 107, 157, 0.1), rgba(78, 205, 196, 0.1));
+            border-radius: 15px;
+            border-left: 5px solid #ff6b9d;
+        }
+
+        .help-section h3 {
+            color: #ff6b9d;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .help-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .help-item {
+            padding: 10px 0;
+            color: #666;
+            line-height: 1.5;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .help-item:last-child {
+            border-bottom: none;
+        }
+
+        .help-item::before {
+            content: '💡';
+            margin-right: 10px;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 20px;
+            }
+
+            .nav-menu {
+                display: flex;
+                overflow-x: auto;
+                gap: 10px;
+            }
+
+            .nav-item {
+                margin-bottom: 0;
+                min-width: 120px;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .iframe-container {
+                height: 500px;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+        }
+
+        /* Decorative Elements */
+        .decorative-icon {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="sidebar">
+            <div class="logo">
+                <h1>Meu Canal</h1>
+                <p>Criatividade sem limites</p>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">🏠 Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="videos.html" class="nav-link">🎥 Vídeos</a>
+                </li>
+                <li class="nav-item">
+                    <a href="series.html" class="nav-link">📺 Séries</a>
+                </li>
+                <li class="nav-item">
+                    <a href="dubladores.html" class="nav-link">🎙️ Dubladores</a>
+                </li>
+                <li class="nav-item">
+                    <a href="collab.html" class="nav-link">🤝 Collab</a>
+                </li>
+                <li class="nav-item">
+                    <a href="roteiros.html" class="nav-link">📝 Roteiros</a>
+                </li>
+                <li class="nav-item">
+                    <a href="imagens.html" class="nav-link">🖼️ Imagens</a>
+                </li>
+                <li class="nav-item">
+                    <a href="estreias.html" class="nav-link">⭐ Estreias</a>
+                </li>
+                <li class="nav-item">
+                    <a href="Miraculous.html" class="nav-link">🐞 Miraculous</a>
+                </li>
+                <li class="nav-item">
+                    <a href="spin.html" class="nav-link">🔄 Spin-offs</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link active">💡 Sugestões</a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <div class="header">
+                <h1>💡 Sugestões</h1>
+                <p>Compartilhe suas ideias conosco e ajude a moldar o futuro do canal!</p>
+            </div>
+
+            <div class="form-container">
+                <div class="form-intro">
+                    <h2><span class="decorative-icon pulse">✨</span> Sua Opinião é Importante!</h2>
+                    <p>Este é o espaço para você enviar sugestões de episódios, personagens, melhorias no canal e tudo mais que você gostaria de ver. Toda sugestão é lida e considerada pela nossa equipe!</p>
+                </div>
+
+                <div class="iframe-container">
+                    <div class="loading-overlay" id="loadingOverlay">
+                        <div class="spinner"></div>
+                        <div class="loading-text">Carregando formulário...</div>
+                    </div>
+                    
+                    <iframe 
+                        src="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAO__oU89URUNlpNTVlERlJXRDRPRkJQV1lGWU4wOFA1Wi4u&embed=true" 
+                        frameborder="0" 
+                        marginwidth="0" 
+                        marginheight="0" 
+                        allowfullscreen 
+                        webkitallowfullscreen 
+                        mozallowfullscreen 
+                        msallowfullscreen
+                        onload="hideLoading()">
+                    </iframe>
+                </div>
+
+                <div class="help-section">
+                    <h3>
+                        <span class="decorative-icon">🤝</span>
+                        Como suas sugestões nos ajudam:
+                    </h3>
+                    <ul class="help-list">
+                        <li class="help-item">Criação de novos episódios e personagens baseados nas suas ideias</li>
+                        <li class="help-item">Melhorias na qualidade e conteúdo dos vídeos</li>
+                        <li class="help-item">Desenvolvimento de novas séries e spin-offs</li>
+                        <li class="help-item">Escolha de temas e assuntos mais interessantes para você</li>
+                        <li class="help-item">Construção de uma comunidade mais engajada e participativa</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Função para esconder o overlay de loading
+        function hideLoading() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            setTimeout(() => {
+                loadingOverlay.classList.add('hidden');
+            }, 500);
+        }
+
+        // Adiciona interatividade aos links da navegação
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (this.getAttribute('href') === '#') {
+                    e.preventDefault();
+                }
+                
+                // Remove active class from all links
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                // Add active class to clicked link
+                this.classList.add('active');
+            });
+        });
+
+        // Animação de entrada dos elementos
+        function animateElements() {
+            const elements = document.querySelectorAll('.form-container, .form-intro, .iframe-container, .help-section');
+            
+            elements.forEach((element, index) => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(30px)';
+                
+                setTimeout(() => {
+                    element.style.transition = 'all 0.6s ease';
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        }
+
+        // Executar animações quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(animateElements, 300);
+            
+            // Esconder loading se o iframe não carregar em 10 segundos
+            setTimeout(() => {
+                hideLoading();
+            }, 10000);
+        });
+
+        // Monitorar se o iframe está responsivo
+        const iframe = document.querySelector('iframe');
+        
+        // Ajustar altura do iframe para mobile
+        function adjustIframeHeight() {
+            if (window.innerWidth <= 768) {
+                document.querySelector('.iframe-container').style.height = '500px';
+            } else {
+                document.querySelector('.iframe-container').style.height = '600px';
+            }
+        }
+
+        // Executar no carregamento e quando a janela for redimensionada
+        window.addEventListener('load', adjustIframeHeight);
+        window.addEventListener('resize', adjustIframeHeight);
+    </script>
+</body>
+</html>
